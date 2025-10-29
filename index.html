@@ -89,11 +89,9 @@
                 _makeCode.call(this, text);
 
                 if (this._el) {
-                    // remove title on the container itself
                     if (this._el.hasAttribute('title')) {
                         this._el.removeAttribute('title');
                     }
-                    // and on any descendants (e.g., <img>, <canvas>)
                     this._el.querySelectorAll('[title]').forEach(el => el.removeAttribute('title'));
                 }
             };
@@ -125,14 +123,12 @@
 
         let initialized = false;
 
-        function init() {
-            if (initialized) return;
-            initialized = true;
-
+        function updateDisplay() {
             const currentNumber = getCurrentNumber();
 
             if (!window.location.hash) {
                 window.location.hash = currentNumber;
+                return;
             }
 
             document.getElementById('label').textContent = currentNumber;
@@ -149,6 +145,17 @@
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function init() {
+            if (initialized) return;
+            initialized = true;
+
+            updateDisplay();
+
+            window.addEventListener('hashchange', function() {
+                updateDisplay();
             });
         }
 
