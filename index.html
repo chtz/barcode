@@ -88,12 +88,14 @@
             } else {
                 const array = new Uint8Array(32);
                 crypto.getRandomValues(array);
-                return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+                const randomHex = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+                return calculateNextNumber(randomHex);
             }
         }
 
         function calculateNextNumber(currentNumber) {
-            const hash = CryptoJS.SHA512('foo' + currentNumber);
+            const baseUrl = window.location.origin + window.location.pathname;
+            const hash = CryptoJS.SHA512(baseUrl + currentNumber);
             return hash.toString(CryptoJS.enc.Hex);
         }
 
